@@ -5,44 +5,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Clase envoltorio para estandarizar todas las respuestas de la API.
- * @param <T> Tipo de datos que contiene la respuesta
+ * Wrapper class to standardize all API responses.
+ * @param <T> Type of data contained in the response.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse<T> {
     /**
-     * Indica si la operacion fue exitosa.
+     * Indicates if the operation was successful.
      */
     private boolean success;
 
     /**
-     * Mensaje descriptivo de la respuesta.
+     * Descriptive message about the response.
      */
     private String message;
 
     /**
-     * Datos devueltos por la operacion.
+     * Data returned by the operation.
      */
     private T data;
 
     /**
-     * Crea una respuesta de exito.
-     * @param data Datos a devolver
-     * @param message Mensaje descriptivo
-     * @param <T> Tipo de dato
-     * @return ApiResponse exitosa
+     * Creates a successful response.
+     * @param data Data to return.
+     * @param message Descriptive message.
+     * @param <T> Data type.
+     * @return A successful ApiResponse.
      */
     public static <T> ApiResponse<T> success(T data, String message) {
         return new ApiResponse<>(true, message, data);
     }
 
     /**
-     * Crea una respuesta de error.
-     * @param message Mensaje del error
-     * @param <T> Tipo de dato
-     * @return ApiResponse fallida
+     * Creates an error response.
+     * @param message Error message.
+     * @param <T> Data type.
+     * @return A failed ApiResponse.
      */
     public static <T> ApiResponse<T> error(String message) {
         return new ApiResponse<>(false, message, null);

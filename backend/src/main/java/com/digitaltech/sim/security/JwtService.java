@@ -14,37 +14,37 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Base de generacion y parseo JWT.
+ * JWT generation and parsing service.
  */
 @Service
 public class JwtService {
 
     /**
-     * Llave de 256 bits generada dinamicamente en memoria.
-     * Para produccion usar persistente y larga.
+     * 256-bit key generated dynamically in memory.
+     * Use a persistent and long key for production.
      */
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     /**
-     * Validez genérica para el token: 10 horas.
+     * Generic token validity: 10 hours.
      */
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
 
     /**
-     * Obtiene el usuario del token
-     * @param token el JWT token
-     * @return username contenido en JWT
+     * Extracts the username from the token.
+     * @param token the JWT token
+     * @return username contained in JWT
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     /**
-     * Extrae un claim con map de la payload.
-     * @param token jwtt
-     * @param claimsResolver extractor generico
-     * @param <T> tipado dinamico
-     * @return el campo resultante
+     * Extracts a claim from the payload using a claims resolver function.
+     * @param token JWT token
+     * @param claimsResolver functional extractor
+     * @param <T> dynamic type
+     * @return the extracted claim
      */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -60,19 +60,19 @@ public class JwtService {
     }
 
     /**
-     * Genera token simple.
-     * @param userDetails objeto spring details
-     * @return String de token
+     * Generates a simple token.
+     * @param userDetails spring security details object
+     * @return token string
      */
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     /**
-     * Genera token con extra claims.
-     * @param extraClaims map custom
-     * @param userDetails string object principal
-     * @return String de token
+     * Generates a token with extra claims.
+     * @param extraClaims custom claims map
+     * @param userDetails principal user details
+     * @return token string
      */
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
@@ -85,10 +85,10 @@ public class JwtService {
     }
 
     /**
-     * Comprueba si el token pertenece al usuario y si esta valido aun.
-     * @param token string puro
-     * @param userDetails string del principal spring request
-     * @return verdadero si match correcto
+     * Checks if the token belongs to the user and if it is still valid.
+     * @param token raw token string
+     * @param userDetails principal user details from spring request
+     * @return true if token is valid and matches user
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

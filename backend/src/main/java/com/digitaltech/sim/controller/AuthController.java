@@ -3,7 +3,7 @@ package com.digitaltech.sim.controller;
 import com.digitaltech.sim.dto.ApiResponse;
 import com.digitaltech.sim.dto.AuthRequest;
 import com.digitaltech.sim.dto.AuthResponse;
-import com.digitaltech.sim.service.AuthService;
+import com.digitaltech.sim.service.impl.AuthServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
-    /**
-     * Inyeccion por constructor
-     */
-    public AuthController(AuthService authService) {
+    public AuthController(AuthServiceImpl authService) {
         this.authService = authService;
     }
 
-    /**
-     * Endpoint de registro de usuarios.
-     */
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody AuthRequest request) {
         AuthResponse responseData = authService.register(request);
@@ -38,9 +32,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Endpoint para login de usuarios.
-     */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody AuthRequest request) {
         AuthResponse responseData = authService.login(request);

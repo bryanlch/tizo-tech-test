@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO para la respuesta con token JWT
+ * DTO for JWT token response.
  */
 @Data
 @NoArgsConstructor

@@ -2,11 +2,11 @@ package com.digitaltech.sim.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * Entidad de Usuario para el sistema de Autenticacion.
+ * Entity representing a system user for authentication.
  */
 @Entity
 @Table(name = "user")
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Setter
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
