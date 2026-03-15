@@ -1,0 +1,36 @@
+<div
+  class="flex flex-col md:flex-row min-h-screen bg-neo-bg font-sans text-neo-black relative"
+>
+  <header
+    class="md:hidden flex items-center justify-between p-4 bg-white border-b-4 border-neo-black shadow-neo sticky top-0 z-40"
+  >
+    <h1 class="text-xl font-black">
+      Digital Tech <span class="text-neo-primary">SIM</span>
+    </h1>
+    <button
+      (click)="toggleMenu()"
+      class="bg-neo-accent border-4 border-neo-black p-2 font-black shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+    >
+      ☰
+    </button>
+  </header>
+
+  <app-sidebar-mobile
+    [isOpen]="isMenuOpen"
+    [routes]="routes"
+    (closeMenu)="toggleMenu()"
+    (logoutAction)="logout()"
+  >
+  </app-sidebar-mobile>
+
+  <app-sidebar-desktop
+    [routes]="routes"
+    (logoutAction)="logout()"
+    class="hidden md:block sticky top-0 h-screen shrink-0 z-10"
+  >
+  </app-sidebar-desktop>
+
+  <main class="flex-1 min-w-0 overflow-auto p-4 md:p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>
