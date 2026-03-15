@@ -30,7 +30,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(@NonNull AuthRequest request) {
-
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("This name has used");
+        }
 
         User user = new User();
         user.setUsername(request.getUsername());

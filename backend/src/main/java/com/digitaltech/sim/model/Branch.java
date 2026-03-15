@@ -6,7 +6,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 /**
- * Entity representing a physical branch or subsidiary in the system.
+ * Entity representing a physical branch or store location
+ * where products can be stored and sold.
  */
 @Entity
 @Table(name = "branch")
@@ -16,20 +17,20 @@ import lombok.NoArgsConstructor;
 public class Branch {
 
     /**
-     * Unique identifier for the branch.
+     * Unique identifier of the branch.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Display name of the branch.
+     * Name of the branch.
      */
     @Column(nullable = false, length = 100)
     private String name;
 
     /**
-     * Physical address of the branch.
+     * Physical address where the branch is located.
      */
     @Column(nullable = false, length = 255)
     private String address;

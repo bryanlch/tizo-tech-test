@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 /**
- * Configuracion de seguridad integrando JWT.
+ * Security configuration integrating JWT authentication.
  */
 @Configuration
 @EnableWebSecurity
@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
 
     /**
-     * Inyección por constructor
+     * Constructor-based injection.
      */
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService userDetailsService) {
         this.jwtAuthFilter = jwtAuthFilter;
@@ -36,7 +36,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Configuramos las reglas de seguridad.
+     * Configures security filter chain and rules.
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,7 +57,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Componente proveedor de autenticacion.
+     * Authentication provider bean.
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -68,7 +68,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Gestor de autenticacion
+     * Authentication manager bean.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -76,7 +76,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Encriptador visual a hashes BCrypt
+     * Password encoder using BCrypt.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
