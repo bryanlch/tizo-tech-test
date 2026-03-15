@@ -3,6 +3,9 @@ package com.digitaltech.sim.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * DTO representing inventory information for a specific branch and product.
+ */
 @Data
 @AllArgsConstructor
 public class InventoryDto {

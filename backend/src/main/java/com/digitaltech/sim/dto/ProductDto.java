@@ -8,20 +8,20 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * Data Transfer Object para operaciones de Producto.
+ * Data Transfer Object for product operations.
  */
 @Data
 public class ProductDto {
 
     private Long id;
 
-    @NotBlank(message = "El nombre del producto no puede estar vacío")
+    @NotBlank(message = "Product name is required")
     private String name;
 
-    @NotBlank(message = "El SKU es obligatorio")
+    @NotBlank(message = "SKU is required")
     private String sku;
 
-    @NotNull(message = "El precio es obligatorio")
-    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a 0")
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
     private BigDecimal price;
 }

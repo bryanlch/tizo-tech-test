@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * DTO that enriches a product with its stock levels per branch.
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,6 +26,9 @@ public class ProductWithInventoryDto {
     private BigDecimal price;
     private List<BranchStockDto> inventoryByBranch;
 
+    /**
+     * Nested DTO representing stock information for a single branch.
+     */
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -32,6 +38,13 @@ public class ProductWithInventoryDto {
         private Integer quantity;
     }
 
+    /**
+     * Builds a list of ProductWithInventoryDto from a list of Inventory entities.
+     * Groups inventory items by product and collects branch-specific quantities.
+     *
+     * @param inventory list of Inventory entities
+     * @return list of enriched product DTOs
+     */
     public static List<ProductWithInventoryDto> FromInventory(List<Inventory> inventory) {
         return inventory.stream()
                 .collect(Collectors.groupingBy(Inventory::getProduct))

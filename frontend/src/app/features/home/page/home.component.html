@@ -1,0 +1,68 @@
+<div class="min-h-screen bg-neo-bg p-8 font-sans text-neo-black">
+  <div class="max-w-6xl mx-auto space-y-8">
+    <div
+      class="flex flex-col md:flex-row justify-between items-center mb-8 border-b-4 border-neo-black pb-6"
+    >
+      <h1 class="text-3xl md:text-5xl font-black">Digital Tech SIM</h1>
+
+      <div class="mt-4 md:mt-0 space-x-4 flex">
+        @if (!isAuthenticated) {
+          <a neoButton routerLink="/auth"> Login / Registro </a>
+        }
+
+        @if (isAuthenticated) {
+          @for (route of routes; track $index) {
+            <a neoButton routerLink="{{ route.path }}" variant="secondary">
+              {{ route.label }}
+            </a>
+          }
+        }
+
+        @if (isAuthenticated) {
+          <button neoButton (click)="logout()">Cerrar Sesión</button>
+        }
+      </div>
+    </div>
+
+    <!-- Lista Publica de Productos -->
+    <div class="flex">
+      <div
+        class="w-full mb-8 bg-white inline-block px-4 py-2 border-4 border-neo-black shadow-neo"
+      >
+        <h2 class="text:xl md:text-3xl font-bold">Explorar Productos Disponibles</h2>
+      </div>
+
+      @if (loading()) {
+        <div class="text-xl font-bold italic text-gray-600">Cargando catálogo...</div>
+      }
+
+      @if (!loading() && !products()) {
+        <div
+          class="border-dashed border-4 border-neo-black p-12 text-center text-gray-500 text-xl font-bold bg-white"
+        >
+          Aún no hay productos registrados en el sistema.
+        </div>
+      }
+
+      @if (products()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          @for (prod of products(); track $index) {
+            <div
+              class="bg-white border-4 border-neo-black p-5 shadow-neo relative group hover:-translate-y-2 transition-transform"
+            >
+              <div
+                class="absolute -top-4 -right-4 bg-neo-primary text-white font-black px-3 py-1 border-4 border-neo-black transform rotate-3 group-hover:rotate-6 transition-transform"
+              >
+                SKU: {{ prod.sku }}
+              </div>
+              <h3 class="text-2xl font-black mt-4 mb-3 border-b-2 border-black pb-2">
+                {{ prod.name }}
+              </h3>
+              <p class="font-black text-4xl mb-4 text-center mt-6">${{ prod.price }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

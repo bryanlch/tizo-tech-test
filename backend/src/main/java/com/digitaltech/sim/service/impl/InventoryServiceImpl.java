@@ -73,9 +73,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .findByBranchAndProduct(branch, product)
                 .orElse(null);
 
-        // Case: Product not yet in this branch
         if (inventory == null) {
-            // Cannot remove stock if it's not registered
             if (dto.getQuantity() < 0) {
                 return new ApiResponse<>(false,
                         "Cannot remove stock from a product not registered in the branch",
@@ -92,7 +90,6 @@ public class InventoryServiceImpl implements InventoryService {
             return new ApiResponse<>(true, "Stock adjusted successfully", toDto(inventory));
         }
 
-        // Case: Product already registered, calculate new quantity
         int newQuantity = inventory.getQuantity() + dto.getQuantity();
 
         if (newQuantity < 0) {

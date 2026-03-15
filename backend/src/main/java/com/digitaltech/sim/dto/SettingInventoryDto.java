@@ -4,14 +4,18 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * DTO for updating inventory stock levels.
+ * Contains branch, product and the new quantity to set.
+ */
 @Data
 public class SettingInventoryDto {
-    @NotNull(message = "El ID de la Sede es obligatorio")
+    @NotNull(message = "Branch ID is required")
     private Long branchId;
 
-    @NotNull(message = "El ID del Producto es obligatorio")
+    @NotNull(message = "Product ID is required")
     private Long productId;
 
-    @NotNull(message = "La cantidad es obligatoria")
+    @NotNull(message = "Quantity is required")
     private Integer quantity;
 }

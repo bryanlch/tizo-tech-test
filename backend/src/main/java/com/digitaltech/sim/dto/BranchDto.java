@@ -5,27 +5,27 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * Data Transfer Object para operaciones con sucursales.
+ * Data Transfer Object for branch operations.
  */
 @Data
 public class BranchDto {
 
     /**
-     * Identificador unico de la sucursal. Null para creacion.
+     * Unique branch identifier. Null when creating a new branch.
      */
     private Long id;
 
     /**
-     * Nombre de la sucursal.
+     * Branch name.
      */
-    @NotBlank(message = "El nombre de la sucursal es obligatorio")
-    @Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres")
+    @NotBlank(message = "Branch name is required")
+    @Size(min = 2, max = 100, message = "Branch name must be between 2 and 100 characters")
     private String name;
 
     /**
-     * Direccion de la sucursal.
+     * Branch address.
      */
-    @NotBlank(message = "La direccion de la sucursal es obligatoria")
-    @Size(min = 5, max = 255, message = "La direccion debe tener entre 5 y 255 caracteres")
+    @NotBlank(message = "Branch address is required")
+    @Size(min = 5, max = 255, message = "Branch address must be between 5 and 255 characters")
     private String address;
 }

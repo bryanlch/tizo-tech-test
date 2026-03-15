@@ -33,6 +33,17 @@ public class ProductController {
     }
 
     /**
+     * Retrieves all products in the catalog.
+     * @return List of products within ApiResponse.
+     */
+    @GetMapping("/stock")
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProductsWithStock() {
+        List<ProductDto> data = productService.findAll();
+        ApiResponse<List<ProductDto>> response = ApiResponse.success(data, "Product catalog retrieved successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Retrieves the public catalog with inventory information.
      * @return List of products with stock information.
      */
