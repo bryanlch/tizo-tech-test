@@ -1,0 +1,88 @@
+<div
+  class="min-h-screen bg-neo-bg flex items-center justify-center p-4 font-sans text-neo-black"
+>
+  <div class="w-full max-w-md bg-white border-4 border-neo-black p-8 shadow-neo">
+    <h1 class="text-4xl font-black mb-6 text-center">
+      {{ isLoginMode() ? "Inicia Sesión" : "Regístrate" }}
+    </h1>
+
+    <h2 class="text-xl font-bold mb-6 text-center text-gray-700">Digital Tech SIM</h2>
+
+    <form
+      #authForm="ngForm"
+      (ngSubmit)="onSubmit(authForm)"
+      class="flex flex-col space-y-2"
+    >
+      <div class="flex flex-col">
+        <label for="username" class="font-bold mb-1">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="authRequest.username"
+          required
+          class="border-4 border-neo-black p-3 bg-neo-bg focus:outline-none focus:bg-white transition-colors"
+          #username="ngModel"
+        />
+        <div class="h-6 mt-1">
+          @if (username.invalid && (username.dirty || username.touched)) {
+            <span class="text-red-500 font-bold text-sm">
+              * El usuario es requerido.
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="password" class="font-bold mb-1">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="authRequest.password"
+          required
+          class="border-4 border-neo-black p-3 bg-neo-bg focus:outline-none focus:bg-white transition-colors"
+          #password="ngModel"
+        />
+        <div class="h-6 mt-1">
+          @if (password.invalid && (password.dirty || password.touched)) {
+            <span class="text-red-500 font-bold text-sm">
+              * La contraseña es requerida.
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="min-h-14 flex items-center justify-center">
+        @if (errorMensaje()) {
+          <span
+            class="w-full block text-red-500 font-bold mt-2 bg-red-100 p-2 border-2 border-red-500"
+          >
+            {{ errorMensaje() }}
+          </span>
+        }
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="w-full bg-neo-primary text-black font-black text-xl py-3 border-4 border-neo-black shadow-neo hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ loading() ? "Cargando..." : isLoginMode() ? "Entrar" : "Registrarme" }}
+      </button>
+    </form>
+
+    <div class="mt-8 text-center border-t-4 border-neo-black pt-4">
+      <p class="font-bold">
+        {{ isLoginMode() ? "¿No tienes cuenta?" : "¿Ya tienes una cuenta?" }}
+        <button
+          type="button"
+          (click)="switchMode()"
+          class="text-neo-primary underline hover:text-red-800"
+        >
+          {{ isLoginMode() ? "Crea una aquí" : "Inicia Sesión" }}
+        </button>
+      </p>
+    </div>
+  </div>
+</div>

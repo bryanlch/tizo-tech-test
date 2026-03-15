@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neo-bg: #f0f0f0;
+  --color-neo-black: #000000;
+  --color-neo-white: #ffffff;
+
+  --color-neo-primary: #f97316;
+  --color-neo-secondary: #a78bfa;
+  --color-neo-accent: #22d3ee;
+  --color-neo-pink: #fb7185;
+  --color-neo-green: #4ade80;
+
+  --shadow-neo: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-neo-lg: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-neo-xl: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+
+  --border-width-neo: 2px;
+}

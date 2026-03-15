@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -23,3 +25,8 @@ services:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
