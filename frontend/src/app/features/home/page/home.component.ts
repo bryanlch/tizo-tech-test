@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
     this.productsService.getProducts().subscribe({
       next: (res: any) => {
         this.loading.set(false);
-        if (res.success) {
+        if (res.code === 200 || res.code === 201) {
           this.products.set(res.data);
         }
       },

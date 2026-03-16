@@ -8,50 +8,17 @@
 
     <h2 class="text-xl font-bold mb-6 text-center text-gray-700">Digital Tech SIM</h2>
 
-    <form
-      #authForm="ngForm"
-      (ngSubmit)="onSubmit(authForm)"
-      class="flex flex-col space-y-2"
-    >
-      <div class="flex flex-col">
-        <label for="username" class="font-bold mb-1">Usuario</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          [(ngModel)]="authRequest.username"
-          required
-          class="border-4 border-neo-black p-3 bg-neo-bg focus:outline-none focus:bg-white transition-colors"
-          #username="ngModel"
-        />
-        <div class="h-6 mt-1">
-          @if (username.invalid && (username.dirty || username.touched)) {
-            <span class="text-red-500 font-bold text-sm">
-              * El usuario es requerido.
-            </span>
-          }
-        </div>
-      </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col space-y-2">
+      <neo-field label="Usuario" error="getError('username', 'El usuario es requerido')">
+        <input neoInput type="text" formControlName="username" />
+      </neo-field>
 
-      <div class="flex flex-col">
-        <label for="password" class="font-bold mb-1">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="authRequest.password"
-          required
-          class="border-4 border-neo-black p-3 bg-neo-bg focus:outline-none focus:bg-white transition-colors"
-          #password="ngModel"
-        />
-        <div class="h-6 mt-1">
-          @if (password.invalid && (password.dirty || password.touched)) {
-            <span class="text-red-500 font-bold text-sm">
-              * La contraseña es requerida.
-            </span>
-          }
-        </div>
-      </div>
+      <neo-field
+        label="Contraseña"
+        error="getError('password', 'La contraseña es requerida')"
+      >
+        <input neoInput type="password" formControlName="password" />
+      </neo-field>
 
       <div class="min-h-14 flex items-center justify-center">
         @if (errorMensaje()) {
@@ -63,11 +30,7 @@
         }
       </div>
 
-      <button
-        type="submit"
-        [disabled]="loading()"
-        class="w-full bg-neo-primary text-black font-black text-xl py-3 border-4 border-neo-black shadow-neo hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-      >
+      <button neoButton type="submit" [disabled]="loading()" class="w-full text-xl py-3">
         {{ loading() ? "Cargando..." : isLoginMode() ? "Entrar" : "Registrarme" }}
       </button>
     </form>

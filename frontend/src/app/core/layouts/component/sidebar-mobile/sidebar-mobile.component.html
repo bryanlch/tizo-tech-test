@@ -1,0 +1,41 @@
+<div
+  class="md:hidden h-screen fixed inset-0 z-50 bg-black/60 backdrop-blur transition-opacity duration-300 ease-in-out"
+  [ngClass]="{
+    'opacity-100 pointer-events-auto': isOpen,
+    'opacity-0 pointer-events-none': !isOpen,
+  }"
+  (click)="closeMenu.emit()"
+></div>
+
+<div
+  class="md:hidden fixed top-0 right-0 h-screen w-[75%] bg-white border-l-4 border-neo-black z-50 flex flex-col p-6 overflow-y-auto transform transition-transform duration-300 ease-in-out shadow-[-8px_0px_0px_0px_rgba(0,0,0,1)]"
+  [ngClass]="{
+    'translate-x-0': isOpen,
+    'translate-x-full': !isOpen,
+  }"
+>
+  <div class="mb-10 flex items-center justify-between">
+    <h1 class="text-2xl font-black">Menú</h1>
+    <button (click)="closeMenu.emit()" neoButton variant="secondary" size="sm">×</button>
+  </div>
+
+  <nav class="flex flex-col space-y-4">
+    @for (route of routes; track $index) {
+      <a
+        routerLink="{{ route.path }}"
+        routerLinkActive="bg-neo-accent"
+        (click)="closeMenu.emit()"
+        neoButton
+        variant="white"
+      >
+        {{ route.emoji }} {{ route.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="mt-auto pt-6 border-t-4 border-neo-black">
+    <button (click)="logoutAction.emit()" neoButton variant="green" [fullWidth]="true">
+      🚪 Cerrar session
+    </button>
+  </div>
+</div>

@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   },
   PRODUCTS: {
     BASE: `${BASE_URL}/product`,
+    WITH_INVENTORY: `${BASE_URL}/product/public`,
   },
   INVENTORY: {
     BASE: `${BASE_URL}/inventory`,

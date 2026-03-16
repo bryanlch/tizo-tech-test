@@ -1,0 +1,29 @@
+<aside
+  class="max-w-60 bg-white border-r-4 border-neo-black flex flex-col p-6 shadow-neo h-full"
+>
+  <div class="mb-10 text-center">
+    <h1 class="text-3xl font-black leading-tight border-b-4 border-neo-black pb-4">
+      Digital Tech<br /><span class="text-neo-primary">SIM</span>
+    </h1>
+  </div>
+
+  <nav class="flex-1 space-y-4">
+    @for (route of routes; track $index) {
+      <a
+        routerLink="{{ route.path }}"
+        routerLinkActive="bg-neo-accent"
+        neoButton
+        [fullWidth]="true"
+        variant="white"
+      >
+        {{ route.emoji }} {{ route.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="mt-auto pt-6 border-t-4 border-neo-black">
+    <button neoButton (click)="logoutAction.emit()" [fullWidth]="true">
+      Cerrar Session
+    </button>
+  </div>
+</aside>

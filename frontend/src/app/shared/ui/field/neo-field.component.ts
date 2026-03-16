@@ -57,9 +57,9 @@ export class NeoFieldComponent implements AfterContentInit {
 
     if (c.invalid && (c.dirty || c.touched)) {
       if (c.errors?.["required"]) {
-        this.errorMessage = "Este campo es requerido";
+        this.errorMessage = "This field is required";
       } else {
-        this.errorMessage = "Campo inválido";
+        this.errorMessage = "Invalid field value";
       }
     } else {
       this.errorMessage = "";

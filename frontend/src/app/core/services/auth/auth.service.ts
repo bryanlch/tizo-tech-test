@@ -30,7 +30,7 @@ export class AuthService {
       .post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, request)
       .pipe(
         tap((res) => {
-          if (res.success && res.data?.token) {
+          if (res.code === 200 && res.data?.token) {
             this.setSession(res.data.token, res.data.username);
           }
         }),
@@ -42,7 +42,7 @@ export class AuthService {
       .post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.REGISTER, request)
       .pipe(
         tap((res) => {
-          if (res.success && res.data?.token) {
+          if (res.code === 200 && res.data?.token) {
             this.setSession(res.data.token, res.data.username);
           }
         }),

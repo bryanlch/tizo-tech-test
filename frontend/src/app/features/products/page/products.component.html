@@ -1,0 +1,83 @@
+<div class="p-8 font-sans text-neo-black bg-neo-bg min-h-screen">
+  <div class="max-w-5xl mx-auto space-y-8">
+    <div class="mb-8 border-b-4 border-neo-black pb-4">
+      <h1 class="text-4xl font-black">Catálogo de Productos</h1>
+    </div>
+
+    <!-- FORM -->
+
+    <div class="bg-white border-4 border-neo-black p-6 shadow-neo">
+      <h2 class="text-2xl font-bold mb-6">Registrar Nuevo Producto</h2>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <neo-field label="Nombre del Producto">
+            <input neoInput type="text" formControlName="name" />
+          </neo-field>
+
+          <neo-field label="Código SKU">
+            <input neoInput type="text" formControlName="sku" />
+          </neo-field>
+
+          <neo-field label="Precio">
+            <input neoInput type="number" formControlName="price" />
+          </neo-field>
+        </div>
+
+        @if (errorMessage()) {
+          <span
+            class="w-full block text-red-500 font-bold bg-red-100 p-2 border-2 border-red-500"
+          >
+            {{ errorMessage() }}
+          </span>
+        }
+
+        @if (successMessage()) {
+          <span
+            class="w-full block text-green-900 font-bold bg-green-300 p-2 border-2 border-green-900"
+          >
+            {{ successMessage() }}
+          </span>
+        }
+
+        <button neoButton type="submit" [disabled]="loading()">
+          {{ loading() ? "Guardando..." : "Guardar Producto" }}
+        </button>
+      </form>
+    </div>
+
+    <div class="bg-white border-4 border-neo-black p-6 shadow-neo">
+      <h2 class="text-2xl font-bold mb-6">Productos Registrados</h2>
+
+      @if (products().length === 0) {
+        <div
+          class="border-dashed border-4 border-neo-black p-8 text-center font-bold text-gray-500 bg-neo-bg"
+        >
+          No hay productos registrados aún en el catálogo.
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+          @for (prod of products(); track prod.id) {
+            <div
+              class="bg-neo-bg border-4 border-neo-black p-4 shadow-neo relative hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+            >
+              <div
+                class="absolute -top-3 -right-3 bg-black text-white font-black px-2 py-1 border-2 border-neo-black text-xs"
+              >
+                SKU: {{ prod.sku }}
+              </div>
+
+              <h3 class="text-xl font-bold mt-2 mb-2 wrap-break-word">
+                {{ prod.name }}
+              </h3>
+
+              <p class="font-black text-2xl mb-1">${{ prod.price }}</p>
+
+              <p class="text-sm text-gray-600 font-bold">ID Ref: #{{ prod.id }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

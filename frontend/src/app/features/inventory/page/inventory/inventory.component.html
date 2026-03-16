@@ -1,0 +1,99 @@
+<div class="p-8">
+  <div
+    class="flex flex-col md:flex-row justify-between items-center mb-10 border-b-4 border-neo-black pb-6"
+  >
+    <h1 class="text-4xl font-black">Control de Inventario</h1>
+  </div>
+
+  @if (loadingInitial()) {
+    <div
+      class="p-8 bg-white border-4 border-neo-black text-xl font-bold italic shadow-neo w-full max-w-sm"
+    >
+      Cargando dependencias...
+    </div>
+  }
+
+  @if (!loadingInitial()) {
+    <div class="flex flex-col space-y-8">
+      <div
+        class="bg-neo-primary text-neo-black p-6 border-4 border-neo-black shadow-neo inline-block w-full max-w-md"
+      >
+        <h2 class="text-2xl font-black mb-4 flex items-center">
+          <span class="mr-2">🏢</span> Selecciona una Sucursal
+        </h2>
+
+        <select
+          class="w-full bg-white border-4 border-neo-black text-xl font-bold p-3 focus:outline-none focus:ring-4 focus:ring-neo-black cursor-pointer"
+          (change)="onBranchSelect($event)"
+        >
+          <option value="" disabled selected>-- Elige una sucursal --</option>
+
+          @for (branch of branches(); track branch.id) {
+            <option [value]="branch.id">
+              {{ branch.name }}
+            </option>
+          }
+        </select>
+      </div>
+
+      @if (selectedBranchId()) {
+        <div class="mt-8">
+          @if (loadingInventory()) {
+            <div
+              class="inline-block p-4 bg-white border-4 border-neo-black font-bold italic shadow-neo animate-pulse"
+            >
+              Sincronizando inventario con la sucursal...
+            </div>
+          }
+
+          @if (!loadingInventory()) {
+            <div class="md:hidden space-y-4">
+              @for (prod of products(); track prod.id) {
+                <app-inventory-card
+                  [product]="prod"
+                  [quantity]="getQuantityForProduct(prod.id!)"
+                  [loading]="updatingStockFor() === prod.id"
+                  [decrease]="(p) => updateQuantity(p,-1)"
+                  [increase]="(p) => updateQuantity(p,1)"
+                />
+              }
+            </div>
+
+            <div class="hidden md:block">
+              <app-inventory-table
+                [products]="products()"
+                [getQuantity]="getQuantityForProduct.bind(this)"
+                [updatingStockFor]="updatingStockFor()"
+                [decrease]="(p) => updateQuantity(p,-1)"
+                [increase]="(p) => updateQuantity(p,1)"
+              />
+            </div>
+          }
+        </div>
+      }
+
+      @if (loadingProductsWithInventory() && !selectedBranchId()) {
+        <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
+          @for (prod of products(); track prod.id) {
+            <div
+              class="p-4 bg-white border-4 border-neo-black font-bold italic shadow-neo"
+            >
+              <p>{{ prod.name }}</p>
+              <p>{{ prod.sku }}</p>
+              <p class="text-sm text-gray-500">
+                Total en inventario: {{ getTotalQuantity(prod) }}
+              </p>
+              <!--
+              @for (inv of prod.inventoryByBranch ?? []; track inv.branchId) {
+                <p class="text-sm text-gray-500">
+                  Sucursal {{ inv.branchname }}: {{ inv.quantity }}
+                </p>
+              }
+  -->
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
