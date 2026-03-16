@@ -1,0 +1,64 @@
+name: CI/CD Pipeline to AWS ECS
+
+# Triggered on push to main branch
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPO_BACKEND: sim-backend-repo
+  ECR_REPO_FRONTEND: sim-frontend-repo
+  ECS_CLUSTER: sim-cluster
+  ECS_SVC_BACKEND: sim-backend-service
+  ECS_SVC_FRONTEND: sim-frontend-service
+
+jobs:
+  build-and-deploy:
+    name: Build Docker Images and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout Source Code
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 2.Auth AWS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # 3. Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 4. Build and Push Backend Image
+      - name: Build and Push Backend Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd backend
+          docker build -f Dockerfile.prod -t $ECR_REGISTRY/${{ env.ECR_REPO_BACKEND }}:latest -t $ECR_REGISTRY/${{ env.ECR_REPO_BACKEND }}:$IMAGE_TAG .
+          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_BACKEND }}
+
+      # 5. Build and Push Frontend Image
+      - name: Build and Push Frontend Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd frontend
+          docker build -f Dockerfile.prod -t $ECR_REGISTRY/${{ env.ECR_REPO_FRONTEND }}:latest -t $ECR_REGISTRY/${{ env.ECR_REPO_FRONTEND }}:$IMAGE_TAG .
+          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_FRONTEND }}
+
+      # 6. Update ECS Services
+      - name: Update ECS Services
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SVC_BACKEND }} --force-new-deployment
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SVC_FRONTEND }} --force-new-deployment
