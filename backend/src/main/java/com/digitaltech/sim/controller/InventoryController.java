@@ -28,9 +28,7 @@ public class InventoryController {
      */
     @GetMapping("/branch/{branchId}")
     public ResponseEntity<ApiResponse<List<InventoryDto>>> getInventoryByBranch(@PathVariable Long branchId) {
-        ApiResponse<List<InventoryDto>> response = inventoryService.getInventoryByBranch(branchId);
-        int status = response.isSuccess() ? 200 : 404;
-        return ResponseEntity.status(status).body(response);
+        return inventoryService.getInventoryByBranch(branchId).toHttp();
     }
 
     /**
@@ -40,8 +38,6 @@ public class InventoryController {
      */
     @PostMapping("/setting")
     public ResponseEntity<ApiResponse<InventoryDto>> settingStock(@Valid @RequestBody SettingInventoryDto dto) {
-        ApiResponse<InventoryDto> response = inventoryService.settingStock(dto);
-        int status = response.isSuccess() ? 200 : 400;
-        return ResponseEntity.status(status).body(response);
+        return  inventoryService.settingStock(dto).toHttp();
     }
 }

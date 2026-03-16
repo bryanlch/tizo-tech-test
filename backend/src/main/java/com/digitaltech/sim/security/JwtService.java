@@ -26,9 +26,9 @@ public class JwtService {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     /**
-     * Generic token validity: 10 hours.
+     * Generic token validity: 3 Days.
      */
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;
 
     /**
      * Extracts the username from the token.

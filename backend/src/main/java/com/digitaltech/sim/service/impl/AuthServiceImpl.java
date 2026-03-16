@@ -1,5 +1,6 @@
 package com.digitaltech.sim.service.impl;
 
+import com.digitaltech.sim.dto.ApiResponse;
 import com.digitaltech.sim.dto.AuthRequest;
 import com.digitaltech.sim.dto.AuthResponse;
 import com.digitaltech.sim.model.User;
@@ -15,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.digitaltech.sim.dto.ApiResponse.success;
+
 /**
  * Business logic for user authentication.
  */
@@ -29,9 +32,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
 
     @Override
-    public AuthResponse register(@NonNull AuthRequest request) {
+    public ApiResponse<AuthResponse> register(@NonNull AuthRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("This name has used");
+            throw new IllegalArgumentException("Username is already taken: " + request.getUsername());
         }
 
         User user = new User();
@@ -42,11 +45,11 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtService.generateToken(userDetails);
 
-        return new AuthResponse(jwtToken, user.getUsername());
+        return success(new AuthResponse(jwtToken, user.getUsername()));
     }
 
     @Override
-    public AuthResponse login(AuthRequest request) {
+    public ApiResponse<AuthResponse> login(AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -55,6 +58,6 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String jwtToken = jwtService.generateToken(userDetails);
 
-        return new AuthResponse(jwtToken, request.getUsername());
+        return success(new AuthResponse(jwtToken, request.getUsername()));
     }
 }

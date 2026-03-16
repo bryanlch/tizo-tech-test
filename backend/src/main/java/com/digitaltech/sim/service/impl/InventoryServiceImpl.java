@@ -11,6 +11,7 @@ import com.digitaltech.sim.repository.ProductRepository;
 import com.digitaltech.sim.repository.BranchRepository;
 import com.digitaltech.sim.service.InventoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public ApiResponse<List<InventoryDto>> getInventoryByBranch(Long branchId) {
         if (!branchRepository.existsById(branchId)) {
-            return new ApiResponse<>(false, "Branch not found", null);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND);
         }
 
         List<InventoryDto> inventories = inventoryRepository.findByBranchId(branchId)
@@ -43,7 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
 
-        return new ApiResponse<>(true, "Inventory retrieved successfully", inventories);
+        return ApiResponse.success(inventories);
     }
 
     /**
@@ -59,14 +60,14 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElse(null);
 
         if (branch == null) {
-            return new ApiResponse<>(false, "Branch not found", null);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, "Branch not found.");
         }
 
         Product product = productRepository.findById(dto.getProductId())
                 .orElse(null);
 
         if (product == null) {
-            return new ApiResponse<>(false, "Product not found", null);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, "Product not found.");
         }
 
         Inventory inventory = inventoryRepository
@@ -75,9 +76,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         if (inventory == null) {
             if (dto.getQuantity() < 0) {
-                return new ApiResponse<>(false,
-                        "Cannot remove stock from a product not registered in the branch",
-                        null);
+                return ApiResponse.badRequest("Cannot remove stock from a product not registered in the branch");
             }
 
             inventory = new Inventory();
@@ -87,19 +86,19 @@ public class InventoryServiceImpl implements InventoryService {
 
             inventory = inventoryRepository.save(inventory);
 
-            return new ApiResponse<>(true, "Stock adjusted successfully", toDto(inventory));
+            return ApiResponse.success(toDto(inventory));
         }
 
         int newQuantity = inventory.getQuantity() + dto.getQuantity();
 
         if (newQuantity < 0) {
-            return new ApiResponse<>(false, "Insufficient stock to perform the adjustment", null);
+            return ApiResponse.badRequest("Insufficient stock to perform the adjustment");
         }
 
         inventory.setQuantity(newQuantity);
         inventory = inventoryRepository.save(inventory);
 
-        return new ApiResponse<>(true, "Stock adjusted successfully", toDto(inventory));
+        return ApiResponse.success(toDto(inventory));
     }
 
     private InventoryDto toDto(Inventory inventory) {

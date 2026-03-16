@@ -4,14 +4,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Clase principal para arrancar la aplicacion Spring Boot del SIM.
+ * Main entry point for the SIM (Multi-Branch Inventory Management System) Spring Boot application.
  */
 @SpringBootApplication
 public class SimBackendApplication {
 
     /**
-     * Metodo principal.
-     * @param args Argumentos de linea de comandos
+     * Application entry point.
+     *
+     * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
         SpringApplication.run(SimBackendApplication.class, args);

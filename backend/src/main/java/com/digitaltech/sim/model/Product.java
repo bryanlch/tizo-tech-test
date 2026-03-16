@@ -41,4 +41,21 @@ public class Product {
      */
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+    /**
+     * Indicates if the product is currently active.
+     * Set to {@code false} when the product is manage-deleted.
+     */
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private Boolean status;
+
+    /**
+     * Ensures every new Product starts as active before persisting.
+     */
+    @PrePersist
+    private void prePersist() {
+        if (this.status == null) {
+            this.status = true;
+        }
+    }
 }

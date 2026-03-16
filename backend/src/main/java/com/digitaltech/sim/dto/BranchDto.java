@@ -28,4 +28,10 @@ public class BranchDto {
     @NotBlank(message = "Branch address is required")
     @Size(min = 5, max = 255, message = "Branch address must be between 5 and 255 characters")
     private String address;
+
+    /**
+     * Indicates whether the branch is currently active.
+     * Will be {@code false} if the branch has been soft-deleted.
+     */
+    private Boolean active;
 }

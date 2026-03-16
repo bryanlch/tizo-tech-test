@@ -12,50 +12,50 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manejador global de excepciones para traducir errores
- * en respuestas uniformes del tipo ApiResponse.
+ * Global exception handler to translate errors
+ * into uniform ApiResponse formats.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * Maneja las excepciones capturadas de negocio o parametros ilegales.
-     * @param ex IllegalArgumentException detectada
-     * @return ApiResponse de error formatada
+     * Handles business exceptions or illegal arguments.
+     * @param ex Caught IllegalArgumentException
+     * @return Formatted error ApiResponse with a 400 Bad Request status
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ApiResponse<Void> response = ApiResponse.error(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        ApiResponse<Void> response = ApiResponse.badRequest(ex.getMessage());
+        return response.toHttp();
     }
 
     /**
-     * Maneja excepciones globales no controladas temporalmente.
-     * @param ex Exception detectada
-     * @return ApiResponse de error generico formatada
+     * Handles unhandled global exceptions to prevent exposing stack traces.
+     * @param ex Caught generic Exception
+     * @return Formatted generic error ApiResponse with a 500 Internal Server Error status
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
-        ApiResponse<Void> response = ApiResponse.error("Un error ha ocurrido en el servidor: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        ApiResponse<Void> response = ApiResponse.error("An unexpected error occurred: " + ex.getMessage());
+        return response.toHttp();
     }
 
     /**
-     * Extrae los errores de validacion Spring e interpeta en el cuerpo.
-     * @param ex MethodArgumentNotValidException arrojado por validación
-     * @return ApiResponse del error formateado
+     * Extracts Spring validation errors and formats them in the response body.
+     * @param ex MethodArgumentNotValidException thrown by @Valid validation
+     * @return Formatted error ApiResponse including the specific field errors in the data payload
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        
-        // Formatear mensaje principal de manera simple para el cliente
-        String primaryMessage = errors.values().stream().findFirst().orElse("Error de validacion");
-        
-        ApiResponse<Object> response = new ApiResponse<>(false, primaryMessage, errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        String primaryMessage = "Validation error in request parameters";
+        ApiResponse<Map<String, String>> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, primaryMessage);
+        response.setData(errors);
+
+        return response.toHttp();
     }
 }

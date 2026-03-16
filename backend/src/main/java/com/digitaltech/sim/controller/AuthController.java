@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Endpoint publico para registro e inicio de sesion.
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -27,15 +24,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody AuthRequest request) {
-        AuthResponse responseData = authService.register(request);
-        ApiResponse<AuthResponse> response = ApiResponse.success(responseData, "Usuario registrado exitosamente");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return authService.register(request).toHttp();
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody AuthRequest request) {
-        AuthResponse responseData = authService.login(request);
-        ApiResponse<AuthResponse> response = ApiResponse.success(responseData, "Login exitoso");
-        return ResponseEntity.ok(response);
+        return authService.login(request).toHttp();
     }
 }

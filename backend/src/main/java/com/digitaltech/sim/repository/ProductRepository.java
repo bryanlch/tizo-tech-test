@@ -19,4 +19,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @return true if it exists, false otherwise.
      */
     boolean existsBySku(String sku);
+
+    /**
+     *  Return Products only status active
+     * @return List of active products
+     */
+    List<Product> findAllByStatusTrue();
 }

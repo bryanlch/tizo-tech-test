@@ -1,18 +1,18 @@
 package com.digitaltech.sim.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Entity representing a physical branch or store location
  * where products can be stored and sold.
  */
 @Entity
+@Builder
 @Table(name = "branch")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Branch {
 
@@ -34,4 +34,21 @@ public class Branch {
      */
     @Column(nullable = false, length = 255)
     private String address;
+
+    /**
+     * Indicates if the branch is currently active.
+     * Set to {@code false} when the branch is soft-deleted.
+     */
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private Boolean status;
+
+    /**
+     * Ensures every new Branch starts as active before persisting.
+     */
+    @PrePersist
+    private void prePersist() {
+        if (this.status == null) {
+            this.status = true;
+        }
+    }
 }
