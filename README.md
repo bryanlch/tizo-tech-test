@@ -5,8 +5,11 @@
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Docker](https://img.shields.io/badge/Docker-enabled-blue)
 ![CI](https://img.shields.io/badge/CI-GitHub_Actions-black)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-AWS%20Fargate-orange)](http://3.144.195.249/)
 
 A full-stack technical challenge project built to demonstrate production-grade architecture, clean code, and real-world engineering practices across the entire stack.
+
+> 🌐 **Live instance:** [http://3.144.195.249/](http://3.144.195.249/) — Deployed on AWS ECS Fargate. Login with `admin` / `admin1234`.
 
 ---
 
@@ -288,25 +291,65 @@ docker-compose -f docker-compose.prod.yml up -d --build
 
 ---
 
-## 12. CI/CD Pipeline
+## 12. CI/CD & Cloud Deployment (AWS)
 
-A **GitHub Actions** workflow handles continuous integration on every push and pull request to `main`:
+This project is deployed on **Amazon Web Services (AWS)** using a serverless container architecture. The full lifecycle — from a `git push` to a live update — is automated via **GitHub Actions**.
 
-```yaml
-# .github/workflows/ci.yml  (outline)
-on: [push, pull_request]
-jobs:
-  backend:
-    - Checkout code
-    - Set up JDK 21
-    - Run: mvn clean verify
-  frontend:
-    - Checkout code
-    - Set up Node 20 + pnpm
-    - Run: pnpm install && pnpm run build
+### Infrastructure
+
+| Component          | Technology                                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------------- |
+| **Compute**        | AWS ECS (Elastic Container Service) on **AWS Fargate** — scales without managing EC2 instances            |
+| **Image Registry** | Amazon ECR (Elastic Container Registry) — stores optimized Docker images for both services               |
+| **Networking**     | Single public-facing port 80 via Nginx reverse proxy; backend port 8080 is never exposed to the internet  |
+
+**Sidecar Container Pattern:** The Frontend (Angular + Nginx) and Backend (Spring Boot) run together inside the same **ECS Task Definition**.
+
+- **Nginx** exposes port `80` to the outside and routes `/api/*` requests internally to Spring Boot via `localhost:8080`.
+- Port `8080` is **not exposed to the internet**, adding an extra security layer.
+
+```
+Internet → Public IP :80
+              │
+          ┌───▼──────────────────────────────────┐
+          │        ECS Fargate Task               │
+          │  ┌─────────────┐  ┌───────────────┐  │
+          │  │  Nginx :80  │──│ Spring Boot   │  │
+          │  │  (Angular   │  │    :8080      │  │
+          │  │   SPA +     │  │  (REST API)   │  │
+          │  │   Proxy)    │  │               │  │
+          │  └─────────────┘  └───────────────┘  │
+          └──────────────────────────────────────┘
 ```
 
-The pipeline ensures both the backend compiles and the Angular production build succeeds before any merge is accepted.
+### Pipeline Steps
+
+On every push to `main`, the pipeline executes automatically:
+
+1. **Build & Test** — Maven compiles and tests the backend; pnpm builds the Angular production bundle.
+2. **Multi-stage Docker Build** — Produces ultra-lightweight Alpine Linux images for both services.
+3. **Push to ECR** — Authenticates via IAM roles and pushes the new images to Amazon ECR.
+4. **Rolling Update on ECS** — Triggers a **zero-downtime deployment**, replacing the running task with the new version.
+
+```
+[Push to main]
+      │
+      ▼
+[GitHub Actions]
+      ├─ mvn clean verify            (backend build + tests)
+      ├─ pnpm build                  (Angular production build)
+      ├─ docker build (multi-stage)  (Alpine-based images)
+      ├─ docker push → ECR
+      └─ aws ecs update-service → ECS Fargate rolling update
+```
+
+### Persistence Strategy
+
+**H2 Database** is configured in **file mode**, not the typical in-memory mode:
+
+- Data persists to the Fargate ephemeral volume for as long as the task is running — unlike `mem` mode, which loses all data on every Spring context restart.
+- Reviewers can create records and verify persistence without data loss during hot-reloads.
+- Switching to **PostgreSQL** or **Amazon RDS** requires only a datasource configuration change — no business logic is affected.
 
 ---
 
@@ -342,71 +385,30 @@ pnpm run start
 
 ---
 
-## 14. Technical Decisions
+## 14. Technical Decisions & Design Tradeoffs
 
-| Decision             | Rationale                                                                               |
-| -------------------- | --------------------------------------------------------------------------------------- |
-| **Angular 21**       | Standalone components + signals reduce boilerplate without losing structure             |
-| **Spring Boot**      | Mature ecosystem, convention over configuration, excellent JPA integration              |
-| **H2 in-memory**     | Zero-config database for challenge scope; trivially swappable for any RDBMS             |
-| **JWT (stateless)**  | No session storage needed; scales horizontally without sticky sessions                  |
-| **Docker Compose**   | Reproducible environments; single command to run the entire stack                       |
-| **Neo Brutalism**    | High contrast, zero ambiguity — maximizes user interaction clarity                      |
-| **`ApiResponse<T>`** | Uniform response envelope prevents API surprises and simplifies frontend error handling |
+Built under a ~3-day constraint. Every choice below was made to maximize clarity and working functionality within that scope.
 
----
+| Decision                    | Rationale & Tradeoff                                                                                              |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Angular 21 (standalone)** | Signals + control flow syntax reduce boilerplate; no `NgModule` needed. Aligns with modern Angular practices.     |
+| **Spring Boot**             | Mature ecosystem, convention over configuration, excellent JPA integration.                                        |
+| **H2 (file mode)**          | Zero-config DB for challenge scope; trivially swappable (datasource config only). File mode prevents data loss on Spring reloads. |
+| **JWT (stateless)**         | No session storage needed; scales horizontally without sticky sessions.                                            |
+| **Layered Architecture**    | Better clarity/speed trade-off than Hexagonal (Ports & Adapters) for a time-constrained challenge.               |
+| **Docker Compose**          | Reproducible local environment with a single command; Kubernetes would be overkill here.                          |
+| **Neo Brutalism UI**        | High contrast, zero visual ambiguity — maximizes interaction clarity.                                              |
+| **`ApiResponse<T>`**        | Uniform envelope prevents API surprises and simplifies frontend error handling.                                    |
+| **No migration tool**       | Flyway/Liquibase omitted to reduce setup overhead; would be essential in a production environment.                 |
+| **No RBAC**                 | Authentication is fully implemented; role-based authorization was out of scope for the challenge spec.             |
+| **No automated tests**      | Architecture and API correctness were the priority; unit/integration tests are the natural next step.             |
 
-## 15. Future Improvements
+### Future Improvements
 
-- **Replace H2 with PostgreSQL** — Add `docker-compose.yml` database service; update `application.properties`.
-- **Role-based access control (RBAC)** — Introduce `ADMIN` / `VIEWER` roles with method-level security (`@PreAuthorize`).
-- **Refresh tokens** — Add a `/api/auth/refresh` endpoint to extend sessions without re-login.
-- **Audit logging** — Track who changed what and when using Spring Data Envers or a custom event system.
-- **Pagination** — Add `Pageable` to list endpoints for large datasets.
-- **E2E tests** — Add Playwright or Cypress tests for critical user flows.
-
-## Design Tradeoffs
-
-This project was developed under a limited time frame (3 days), so several pragmatic tradeoffs were made to prioritize clarity, working functionality, and architectural structure.
-
-### H2 Database vs Production Database
-
-H2 was chosen as an in-memory database to simplify setup and ensure the project can run immediately without additional infrastructure.
-
-For a production environment, the system is designed to easily switch to a persistent database such as **PostgreSQL**, which I am familiar with. Because the application relies entirely on JPA/Hibernate abstractions, changing the database would only require updating the datasource configuration.
-
-### No Database Migration Toolgit
-
-Tools like **Flyway** or **Liquibase** were intentionally omitted to reduce setup complexity and development overhead for the challenge.
-
-In a real production system, a migration tool would be essential for versioning database schema changes and managing deployments safely.
-
-### Simplified Authorization Model
-
-The current implementation focuses on **authentication (JWT)** but does not implement role-based authorization.
-
-This decision was made because role management was not explicitly required in the challenge specification and implementing a full RBAC model would increase scope significantly. A natural extension would be introducing roles such as `ADMIN` and `VIEWER` with method-level security using `@PreAuthorize`.
-
-### Layered Architecture vs Hexagonal Architecture
-
-A **classic layered architecture** was chosen instead of a more complex architecture such as **Hexagonal (Ports & Adapters)**.
-
-While hexagonal architecture provides strong decoupling, it also introduces additional abstraction layers. For a time-constrained challenge, the layered approach provides an excellent balance between **clarity, maintainability, and implementation speed**.
-
-### Angular Modern Patterns
-
-The frontend uses **Angular standalone components and signals** to reduce boilerplate and align with modern Angular development practices. This simplifies module management and keeps the codebase lightweight.
-
-### Testing Scope
-
-Due to time constraints, extensive automated testing was not initially implemented. The main focus was ensuring the system architecture, API structure, and frontend interactions were correctly designed.
-
-Adding **unit tests and integration tests** is planned as a next step.
-
-### Infrastructure Simplicity
-
-The project uses **Docker Compose** to orchestrate services. While orchestration platforms like Kubernetes are more suitable for large-scale production environments, Docker Compose provides a simpler and reliable setup for development and demonstration purposes.
-
-### Ephemeral Data
-
-Because H2 runs in memory, all data is lost when the application restarts. This is acceptable for a technical challenge but would not be appropriate for a production environment, where a persistent database would be required.
+- **Replace H2 with PostgreSQL** — Add a DB service to `docker-compose.yml`; update `application.properties`.
+- **Role-based access control (RBAC)** — `ADMIN` / `VIEWER` roles with `@PreAuthorize` method security.
+- **Refresh tokens** — `/api/auth/refresh` endpoint to extend sessions without re-login.
+- **Audit logging** — Track changes using Spring Data Envers or a custom event system.
+- **Pagination** — `Pageable` on all list endpoints for large datasets.
+- **Database migrations** — Flyway or Liquibase for production-grade schema versioning.
+- **E2E tests** — Playwright or Cypress for critical user flows.
