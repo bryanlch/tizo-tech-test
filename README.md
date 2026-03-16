@@ -5,11 +5,11 @@
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Docker](https://img.shields.io/badge/Docker-enabled-blue)
 ![CI](https://img.shields.io/badge/CI-GitHub_Actions-black)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-AWS%20Fargate-orange)](http://3.144.195.249/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-AWS%20Fargate-orange)](http://18.216.42.152/)
 
 A full-stack technical challenge project built to demonstrate production-grade architecture, clean code, and real-world engineering practices across the entire stack.
 
-> 🌐 **Live instance:** [http://3.144.195.249/](http://3.144.195.249/) — Deployed on AWS ECS Fargate. Login with `admin` / `admin1234`.
+> 🌐 **Live instance:** [http://18.216.42.152/](http://18.216.42.152/) — Deployed on AWS ECS Fargate. Login with `admin` / `admin1234`.
 
 ---
 
@@ -297,11 +297,11 @@ This project is deployed on **Amazon Web Services (AWS)** using a serverless con
 
 ### Infrastructure
 
-| Component          | Technology                                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------------------------- |
-| **Compute**        | AWS ECS (Elastic Container Service) on **AWS Fargate** — scales without managing EC2 instances            |
+| Component          | Technology                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Compute**        | AWS ECS (Elastic Container Service) on **AWS Fargate** — scales without managing EC2 instances           |
 | **Image Registry** | Amazon ECR (Elastic Container Registry) — stores optimized Docker images for both services               |
-| **Networking**     | Single public-facing port 80 via Nginx reverse proxy; backend port 8080 is never exposed to the internet  |
+| **Networking**     | Single public-facing port 80 via Nginx reverse proxy; backend port 8080 is never exposed to the internet |
 
 **Sidecar Container Pattern:** The Frontend (Angular + Nginx) and Backend (Spring Boot) run together inside the same **ECS Task Definition**.
 
@@ -389,19 +389,19 @@ pnpm run start
 
 Built under a ~3-day constraint. Every choice below was made to maximize clarity and working functionality within that scope.
 
-| Decision                    | Rationale & Tradeoff                                                                                              |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Angular 21 (standalone)** | Signals + control flow syntax reduce boilerplate; no `NgModule` needed. Aligns with modern Angular practices.     |
-| **Spring Boot**             | Mature ecosystem, convention over configuration, excellent JPA integration.                                        |
+| Decision                    | Rationale & Tradeoff                                                                                                              |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Angular 21 (standalone)** | Signals + control flow syntax reduce boilerplate; no `NgModule` needed. Aligns with modern Angular practices.                     |
+| **Spring Boot**             | Mature ecosystem, convention over configuration, excellent JPA integration.                                                       |
 | **H2 (file mode)**          | Zero-config DB for challenge scope; trivially swappable (datasource config only). File mode prevents data loss on Spring reloads. |
-| **JWT (stateless)**         | No session storage needed; scales horizontally without sticky sessions.                                            |
-| **Layered Architecture**    | Better clarity/speed trade-off than Hexagonal (Ports & Adapters) for a time-constrained challenge.               |
-| **Docker Compose**          | Reproducible local environment with a single command; Kubernetes would be overkill here.                          |
-| **Neo Brutalism UI**        | High contrast, zero visual ambiguity — maximizes interaction clarity.                                              |
-| **`ApiResponse<T>`**        | Uniform envelope prevents API surprises and simplifies frontend error handling.                                    |
-| **No migration tool**       | Flyway/Liquibase omitted to reduce setup overhead; would be essential in a production environment.                 |
-| **No RBAC**                 | Authentication is fully implemented; role-based authorization was out of scope for the challenge spec.             |
-| **No automated tests**      | Architecture and API correctness were the priority; unit/integration tests are the natural next step.             |
+| **JWT (stateless)**         | No session storage needed; scales horizontally without sticky sessions.                                                           |
+| **Layered Architecture**    | Better clarity/speed trade-off than Hexagonal (Ports & Adapters) for a time-constrained challenge.                                |
+| **Docker Compose**          | Reproducible local environment with a single command; Kubernetes would be overkill here.                                          |
+| **Neo Brutalism UI**        | High contrast, zero visual ambiguity — maximizes interaction clarity.                                                             |
+| **`ApiResponse<T>`**        | Uniform envelope prevents API surprises and simplifies frontend error handling.                                                   |
+| **No migration tool**       | Flyway/Liquibase omitted to reduce setup overhead; would be essential in a production environment.                                |
+| **No RBAC**                 | Authentication is fully implemented; role-based authorization was out of scope for the challenge spec.                            |
+| **No automated tests**      | Architecture and API correctness were the priority; unit/integration tests are the natural next step.                             |
 
 ### Future Improvements
 

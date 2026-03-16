@@ -2,13 +2,13 @@
   "info": {
     "_postman_id": "sim-api-collection-v1",
     "name": "SIM — Multi-Branch Inventory Management API",
-    "description": "Complete API collection for the SIM backend. Set the `baseUrl` variable to http://3.144.195.249 (production) or http://localhost:8080 (local). The `token` variable is auto-populated after a successful login or register request.",
+    "description": "Complete API collection for the SIM backend. Set the `baseUrl` variable to http://18.216.42.152 (production) or http://localhost:8080 (local). The `token` variable is auto-populated after a successful login or register request.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://3.144.195.249",
+      "value": "http://18.216.42.152",
       "type": "string"
     },
     {
@@ -41,7 +41,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -49,8 +52,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             },
             "description": "Creates a new user account and returns a signed JWT token. The token is automatically saved to the `token` collection variable."
           }
@@ -75,7 +84,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -83,8 +95,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             },
             "description": "Authenticates with existing credentials. Returns a signed JWT. The seeded admin credentials are `admin` / `admin1234`. The token is automatically saved to the `token` collection variable."
           }
@@ -100,12 +118,20 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/branch",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "branch"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branch"
+              ]
             },
             "description": "Returns a list of all branches where `active = true` (soft-deleted branches are excluded)."
           }
@@ -115,8 +141,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -124,8 +156,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/branch",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "branch"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branch"
+              ]
             },
             "description": "Creates a new branch. `name` (2–100 chars) and `address` (5–255 chars) are required."
           }
@@ -135,8 +172,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -144,8 +187,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/branch/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "branch", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branch",
+                "1"
+              ]
             },
             "description": "Updates the `name` and `address` of an existing active branch. Replace `1` with the target branch ID."
           }
@@ -155,12 +204,21 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/branch/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "branch", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branch",
+                "1"
+              ]
             },
             "description": "Performs a logical (soft) delete on the branch. Sets `active = false` — the record is NOT removed from the database. Replace `1` with the target branch ID."
           }
@@ -176,12 +234,20 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/product",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product"
+              ]
             },
             "description": "Returns all products in the catalog."
           }
@@ -193,8 +259,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/product/public",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product", "public"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "public"
+              ]
             },
             "description": "Returns the product catalog. This endpoint is publicly accessible — no Authorization header required."
           }
@@ -204,12 +276,21 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/product/with-stock",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product", "with-stock"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "with-stock"
+              ]
             },
             "description": "Returns all products with their consolidated inventory information across all branches."
           }
@@ -219,12 +300,21 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/product/stock",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product", "stock"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "stock"
+              ]
             },
             "description": "Alternative endpoint to get all products. Equivalent to GET /api/product."
           }
@@ -234,8 +324,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -243,8 +339,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/product",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product"
+              ]
             },
             "description": "Creates a new product. `name`, `sku` are required strings; `price` must be > 0."
           }
@@ -254,8 +355,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -263,8 +370,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/product/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "1"
+              ]
             },
             "description": "Updates the `name`, `sku`, and `price` of an existing product. Replace `1` with the target product ID."
           }
@@ -274,12 +387,21 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/product/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "product", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "1"
+              ]
             },
             "description": "Performs a logical (soft) delete on the product. Sets `active = false`. Replace `1` with the target product ID."
           }
@@ -295,12 +417,22 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/api/inventory/branch/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "inventory", "branch", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "branch",
+                "1"
+              ]
             },
             "description": "Returns all inventory records (product + stock quantity) for a specific branch. Replace `1` with the target branch ID."
           }
@@ -310,8 +442,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -319,8 +457,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/inventory/setting",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "inventory", "setting"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "setting"
+              ]
             },
             "description": "Idempotent stock adjustment. Creates a new inventory record if none exists for the given branch+product pair; otherwise updates the quantity. All three fields are required and `quantity` must be ≥ 0."
           }
