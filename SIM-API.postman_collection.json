@@ -1,0 +1,342 @@
+{
+  "info": {
+    "_postman_id": "sim-api-collection-v1",
+    "name": "SIM — Multi-Branch Inventory Management API",
+    "description": "Complete API collection for the SIM backend. Set the `baseUrl` variable to http://3.144.195.249 (production) or http://localhost:8080 (local). The `token` variable is auto-populated after a successful login or register request.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://3.144.195.249",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('token', json.data.token);",
+                  "    console.log('Token saved from Register response.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"newuser\",\n    \"password\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Creates a new user account and returns a signed JWT token. The token is automatically saved to the `token` collection variable."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('token', json.data.token);",
+                  "    console.log('Token saved from Login response.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticates with existing credentials. Returns a signed JWT. The seeded admin credentials are `admin` / `admin1234`. The token is automatically saved to the `token` collection variable."
+          }
+        }
+      ],
+      "description": "Public endpoints for user registration and login. No Authorization header required."
+    },
+    {
+      "name": "🏢 Branches",
+      "item": [
+        {
+          "name": "Get All Active Branches",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/branch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "branch"]
+            },
+            "description": "Returns a list of all branches where `active = true` (soft-deleted branches are excluded)."
+          }
+        },
+        {
+          "name": "Create Branch",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Westside Branch\",\n    \"address\": \"456 West Avenue, Westside District\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/branch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "branch"]
+            },
+            "description": "Creates a new branch. `name` (2–100 chars) and `address` (5–255 chars) are required."
+          }
+        },
+        {
+          "name": "Update Branch",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Downtown Flagship\",\n    \"address\": \"123 Main Street, Downtown Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/branch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "branch", "1"]
+            },
+            "description": "Updates the `name` and `address` of an existing active branch. Replace `1` with the target branch ID."
+          }
+        },
+        {
+          "name": "Soft Delete Branch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/branch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "branch", "1"]
+            },
+            "description": "Performs a logical (soft) delete on the branch. Sets `active = false` — the record is NOT removed from the database. Replace `1` with the target branch ID."
+          }
+        }
+      ],
+      "description": "CRUD operations for branch management. All endpoints require a valid Bearer token."
+    },
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product"]
+            },
+            "description": "Returns all products in the catalog."
+          }
+        },
+        {
+          "name": "Get Public Catalog (No Auth)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product", "public"]
+            },
+            "description": "Returns the product catalog. This endpoint is publicly accessible — no Authorization header required."
+          }
+        },
+        {
+          "name": "Get Products With Stock",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/product/with-stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product", "with-stock"]
+            },
+            "description": "Returns all products with their consolidated inventory information across all branches."
+          }
+        },
+        {
+          "name": "Get Products With Stock (Alt)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/product/stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product", "stock"]
+            },
+            "description": "Alternative endpoint to get all products. Equivalent to GET /api/product."
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Wireless Keyboard\",\n    \"sku\": \"WKB-001\",\n    \"price\": 49.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product"]
+            },
+            "description": "Creates a new product. `name`, `sku` are required strings; `price` must be > 0."
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Wireless Keyboard Pro\",\n    \"sku\": \"WKB-001-PRO\",\n    \"price\": 59.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product", "1"]
+            },
+            "description": "Updates the `name`, `sku`, and `price` of an existing product. Replace `1` with the target product ID."
+          }
+        },
+        {
+          "name": "Soft Delete Product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/product/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product", "1"]
+            },
+            "description": "Performs a logical (soft) delete on the product. Sets `active = false`. Replace `1` with the target product ID."
+          }
+        }
+      ],
+      "description": "CRUD operations for the product catalog. Most endpoints require a valid Bearer token."
+    },
+    {
+      "name": "📊 Inventory",
+      "item": [
+        {
+          "name": "Get Inventory by Branch",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/branch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "branch", "1"]
+            },
+            "description": "Returns all inventory records (product + stock quantity) for a specific branch. Replace `1` with the target branch ID."
+          }
+        },
+        {
+          "name": "Set / Adjust Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"branchId\": 1,\n    \"productId\": 1,\n    \"quantity\": 50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/setting",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "setting"]
+            },
+            "description": "Idempotent stock adjustment. Creates a new inventory record if none exists for the given branch+product pair; otherwise updates the quantity. All three fields are required and `quantity` must be ≥ 0."
+          }
+        }
+      ],
+      "description": "Inventory query and stock adjustment endpoints. All endpoints require a valid Bearer token."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}
