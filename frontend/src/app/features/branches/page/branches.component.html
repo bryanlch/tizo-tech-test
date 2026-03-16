@@ -4,12 +4,10 @@
       <h1 class="text-4xl font-black">Gestión de Sucursales</h1>
     </div>
 
-    <!-- Formulario -->
-
     <div class="bg-white border-4 border-neo-black p-6 shadow-neo">
       <h2 class="text-2xl font-bold mb-4">Registrar Nueva Sucursal</h2>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      <form [formGroup]="branchForm" (ngSubmit)="saveBranch()" class="space-y-4">
         <neo-field label="Nombre de la Sede">
           <input neoInput type="text" formControlName="name" />
         </neo-field>
@@ -40,8 +38,6 @@
       </form>
     </div>
 
-    <!-- Listado -->
-
     <div class="bg-white border-4 border-neo-black p-6 shadow-neo mt-8">
       <h2 class="text-2xl font-bold mb-4">Sucursales Registradas</h2>
 
@@ -53,9 +49,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @for (branch of branches(); track branch.id) {
-          <div
-            class="bg-neo-bg border-4 border-neo-black p-4 shadow-neo flex flex-col justify-between"
-          >
+          <button neoButton variant="white" (click)="openModal(branch)">
             <div>
               <h3 class="font-black text-xl mb-2">
                 {{ branch.name }}
@@ -66,14 +60,94 @@
               </p>
             </div>
 
-            <div
-              class="mt-4 text-sm font-bold bg-white border-2 border-neo-black px-2 py-1 self-start"
-            >
-              ID: {{ branch.id }}
-            </div>
-          </div>
+            <p class="text-md text-gray-600 font-bold">ID Ref: #{{ branch.id }}</p>
+          </button>
         }
       </div>
     </div>
   </div>
 </div>
+
+<app-modal
+  [isOpen]="showModal()"
+  [title]="selectedBranch() ? 'Editar Sucursal' : 'Nueva Sucursal'"
+  (close)="closeModal()"
+>
+  <div body class="space-y-4">
+    @if (selectedBranch()) {
+      <div
+        class="bg-neo-secondary text-white p-2 border-2 border-black mb-4 -rotate-1 shadow-neo"
+      >
+        <p class="font-black text-xs uppercase italic">
+          Modificando Sede: {{ selectedBranch()?.name }}
+        </p>
+      </div>
+    }
+
+    <form
+      [formGroup]="branchForm"
+      (ngSubmit)="saveBranch()"
+      class="flex flex-col space-y-5"
+    >
+      <div class="grid grid-cols-1 gap-4">
+        <neo-field label="Nombre de la Sucursal">
+          <input
+            neoInput
+            type="text"
+            formControlName="name"
+            placeholder="Ej. Sede Central Norte"
+          />
+        </neo-field>
+
+        <neo-field label="Dirección Completa">
+          <input
+            neoInput
+            type="text"
+            formControlName="address"
+            placeholder="Av. Principal #123..."
+          />
+        </neo-field>
+      </div>
+
+      @if (errorMessage()) {
+        <div
+          class="bg-neo-pink text-white p-3 border-4 border-black font-bold animate-pulse"
+        >
+          ⚠️ {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div
+          class="bg-neo-green text-black p-3 border-4 border-black font-bold shadow-neo"
+        >
+          ✅ {{ successMessage() }}
+        </div>
+      }
+
+      <button
+        neoButton
+        type="submit"
+        [disabled]="loading()"
+        class="w-full py-4 text-xl mt-2"
+      >
+        {{
+          loading()
+            ? "GUARDANDO..."
+            : selectedBranch()
+              ? "GUARDAR CAMBIOS"
+              : "REGISTRAR SUCURSAL"
+        }}
+      </button>
+    </form>
+  </div>
+
+  <div footer class="w-full">
+    <button
+      (click)="closeModal()"
+      class="w-full sm:w-auto px-8 py-2 border-4 border-black font-black uppercase hover:bg-neo-pink hover:text-white transition-all"
+    >
+      Cancelar
+    </button>
+  </div>
+</app-modal>

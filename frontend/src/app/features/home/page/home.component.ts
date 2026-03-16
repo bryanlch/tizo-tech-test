@@ -5,11 +5,12 @@ import { ProductsService } from "@core/services/products/products.service";
 import { AuthService } from "@core/services/auth/auth.service";
 import { Product } from "@core/models/products.model";
 import { NeoButtonDirective } from "@shared/ui/button/neo-button.directive";
+import { ProductCardComponent } from "@features/home/page/component/product-card/product-card.component";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [CommonModule, RouterModule, NeoButtonDirective],
+  imports: [CommonModule, RouterModule, NeoButtonDirective, ProductCardComponent],
   templateUrl: "./home.component.html",
 })
 export class HomeComponent implements OnInit {

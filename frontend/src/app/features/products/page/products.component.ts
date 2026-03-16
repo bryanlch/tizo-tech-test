@@ -5,7 +5,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from "@angular/forms";
 import { ProductsService } from "@core/services/products/products.service";
 import { Product } from "@core/models/products.model";
 
-import { NeoButtonDirective, NeoFieldComponent, NeoInputDirective } from "@shared/ui";
+import {
+  NeoButtonDirective,
+  NeoFieldComponent,
+  NeoInputDirective,
+  ModalComponent,
+} from "@shared/ui";
 
 @Component({
   selector: "app-products",
@@ -16,6 +21,7 @@ import { NeoButtonDirective, NeoFieldComponent, NeoInputDirective } from "@share
     NeoFieldComponent,
     NeoInputDirective,
     NeoButtonDirective,
+    ModalComponent,
   ],
   templateUrl: "./products.component.html",
 })
@@ -23,13 +29,14 @@ export class ProductsComponent implements OnInit {
   private productsService = inject(ProductsService);
   private fb = inject(FormBuilder);
 
+  selectedProduct = signal<Product | null>(null);
+  showModal = signal(false);
   products = signal<Product[]>([]);
   loading = signal(false);
-
   successMessage = signal("");
   errorMessage = signal("");
 
-  form = this.fb.nonNullable.group({
+  productForm = this.fb.nonNullable.group({
     name: ["", [Validators.required]],
     sku: ["", [Validators.required]],
     price: [0, [Validators.required, Validators.min(0.01)]],
@@ -39,62 +46,66 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
+  openModalProduct(product: Product): void {
+    this.selectedProduct.set(product);
+    this.productForm.patchValue({
+      name: product.name,
+      sku: product.sku,
+      price: product.price,
+    });
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+    this.selectedProduct.set(null);
+    this.productForm.reset(); // Limpia el form al cerrar
+    this.successMessage.set("");
+    this.errorMessage.set("");
+  }
+
   loadProducts(): void {
     this.productsService.getProducts().subscribe({
-      next: (res: any) => {
-        if (res.code === 200 || res.code === 201) {
-          this.products.set(res.data);
-        }
-      },
-      error: (err) => {
-        console.error("Error al cargar productos", err);
-      },
+      next: (res: any) =>
+        res.code >= 200 && res.code < 300 && this.products.set(res.data),
+      error: (err) => console.error("Error al cargar productos", err),
     });
   }
 
-  onSubmit(): void {
-    this.successMessage.set("");
-    this.errorMessage.set("");
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.errorMessage.set("Por favor completa todos los campos correctamente.");
+  saveProduct(): void {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
       return;
     }
 
     this.loading.set(true);
+    const productData = this.productForm.getRawValue();
+    const isEditing = !!this.selectedProduct();
 
-    const product: Product = {
-      name: this.form.value.name as string,
-      sku: this.form.value.sku as string,
-      price: this.form.value.price as number,
-    };
+    const request = isEditing
+      ? this.productsService.updateProduct({
+          id: this.selectedProduct()!.id!,
+          ...productData,
+        })
+      : this.productsService.createProduct(productData);
 
-    this.productsService.createProduct(product).subscribe({
+    request.subscribe({
       next: (res: any) => {
         this.loading.set(false);
-
-        if (res.code === 200 || res.code === 201) {
-          this.successMessage.set(res.message);
-
-          this.products.update((list) => [...list, res.data]);
-
-          this.form.reset({
-            name: "",
-            sku: "",
-            price: 0,
-          });
-        } else {
-          this.errorMessage.set(res.message);
+        if (res.code >= 200 && res.code < 300) {
+          this.successMessage.set(isEditing ? "¡Actualizado!" : "¡Creado!");
+          this.loadProducts();
+          if (!isEditing) this.productForm.reset();
+          if (isEditing) {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1500);
+          }
         }
       },
-
-      error: (err: any) => {
+      error: (err) => {
         this.loading.set(false);
-
-        this.errorMessage.set(
-          err.error?.message || "Error del servidor al crear el producto.",
-        );
+        this.errorMessage.set(err.error?.message || "Error en la operación");
       },
     });
   }

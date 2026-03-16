@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Branch } from '../../models/branches.model';
-import { ApiResponse } from '../../models/api-response.model';
-import { API_ENDPOINTS } from '../../constants/api.constants';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Branch } from "../../models/branches.model";
+import { ApiResponse } from "../../models/api-response.model";
+import { API_ENDPOINTS } from "../../constants/api.constants";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class BranchesService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<ApiResponse<Branch[]>> {
     return this.http.get<ApiResponse<Branch[]>>(API_ENDPOINTS.BRANCHES.BASE);
@@ -18,5 +17,18 @@ export class BranchesService {
 
   create(branch: Branch): Observable<ApiResponse<Branch>> {
     return this.http.post<ApiResponse<Branch>>(API_ENDPOINTS.BRANCHES.BASE, branch);
+  }
+
+  update(branch: Branch): Observable<ApiResponse<Branch>> {
+    return this.http.put<ApiResponse<Branch>>(
+      `${API_ENDPOINTS.BRANCHES.BASE}/${branch.id}`,
+      branch,
+    );
+  }
+
+  delete(branchId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(
+      `${API_ENDPOINTS.BRANCHES.BASE}/${branchId}`,
+    );
   }
 }

@@ -9,6 +9,4 @@ export * from "./field/neo-field.component";
 export * from "./card/neo-card.component";
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
-export * from "./modal/modal-ref";
-export * from "./modal/modal.service";
-export * from "./modal/modal-container.component";
+export * from "./modal/modal.component";

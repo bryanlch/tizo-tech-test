@@ -1,0 +1,44 @@
+@if (isOpen()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+  >
+    <div
+      class="w-full max-w-2xl bg-white border-4 border-neo-black shadow-neo-xl flex flex-col"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        [ngClass]="headerColor()"
+        class="border-b-4 border-neo-black p-4 flex justify-between items-center"
+      >
+        <h2 class="text-xl md:text-2xl font-black uppercase italic tracking-tighter">
+          {{ title() }}
+        </h2>
+
+        <button
+          (click)="onClose()"
+          class="bg-white border-4 border-neo-black p-1 hover:bg-neo-black hover:text-white transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="4"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto max-h-[60vh] text-neo-black">
+        <ng-content select="[body]"></ng-content>
+      </div>
+
+      <div
+        class="p-4 border-t-4 border-neo-black bg-neo-bg flex flex-col sm:flex-row justify-end gap-3"
+      >
+        <ng-content select="[footer]"></ng-content>
+      </div>
+    </div>
+  </div>
+}

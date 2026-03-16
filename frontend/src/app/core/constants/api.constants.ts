@@ -9,8 +9,9 @@ export const API_ENDPOINTS = {
     BASE: `${BASE_URL}/branch`,
   },
   PRODUCTS: {
+    PUBLIC: `${BASE_URL}/product/public`,
     BASE: `${BASE_URL}/product`,
-    WITH_INVENTORY: `${BASE_URL}/product/public`,
+    WITH_INVENTORY: `${BASE_URL}/product/with-stock`,
   },
   INVENTORY: {
     BASE: `${BASE_URL}/inventory`,

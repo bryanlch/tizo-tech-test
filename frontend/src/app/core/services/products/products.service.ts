@@ -24,4 +24,17 @@ export class ProductsService {
   createProduct(product: Product): Observable<ApiResponse<Product>> {
     return this.http.post<ApiResponse<Product>>(API_ENDPOINTS.PRODUCTS.BASE, product);
   }
+
+  updateProduct(product: Product): Observable<ApiResponse<Product>> {
+    return this.http.put<ApiResponse<Product>>(
+      `${API_ENDPOINTS.PRODUCTS.BASE}/${product.id}`,
+      product,
+    );
+  }
+
+  deleteProduct(productId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(
+      `${API_ENDPOINTS.PRODUCTS.BASE}/${productId}`,
+    );
+  }
 }

@@ -35,15 +35,6 @@ importers:
       '@angular/router':
         specifier: ^21.1.0
         version: 21.2.4(@angular/common@21.2.4(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.4(@angular/common@21.2.4(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
-      '@fortawesome/angular-fontawesome':
-        specifier: ^4.0.0
-        version: 4.0.0(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))
-      '@ng-icons/core':
-        specifier: ^33.1.0
-        version: 33.1.0(@angular-devkit/schematics@21.2.2(chokidar@5.0.0))(@angular/common@21.2.4(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(@schematics/angular@21.2.2(chokidar@5.0.0))(rxjs@7.8.2)
-      '@ng-icons/heroicons':
-        specifier: ^33.1.0
-        version: 33.1.0
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.2.1
@@ -1067,19 +1058,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fortawesome/angular-fontawesome@4.0.0':
-    resolution: {integrity: sha512-TCqHqT5ovFY1A4RgMpoBUgS+RX3OVs39+CzHFgzDhbCPAopOa26J748TZJcuZwJAvGAk9tbWeVEmWuLByINAeg==}
-    peerDependencies:
-      '@angular/core': ^21.0.0
-
-  '@fortawesome/fontawesome-common-types@7.2.0':
-    resolution: {integrity: sha512-IpR0bER9FY25p+e7BmFH25MZKEwFHTfRAfhOyJubgiDnoJNsSvJ7nigLraHtp4VOG/cy8D7uiV0dLkHOne5Fhw==}
-    engines: {node: '>=6'}
-
-  '@fortawesome/fontawesome-svg-core@7.2.0':
-    resolution: {integrity: sha512-6639htZMjEkwskf3J+e6/iar+4cTNM9qhoWuRfj9F3eJD6r7iCzV1SWnQr2Mdv0QT0suuqU8BoJCZUyCtP9R4Q==}
-    engines: {node: '>=6'}
-
   '@gar/promise-retry@1.0.2':
     resolution: {integrity: sha512-Lm/ZLhDZcBECta3TmCQSngiQykFdfw+QtI1/GYMsZd4l3nG+P8WLB16XuS7WaBGLQ+9E+cOcWQsth9cayuGt8g==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -1574,18 +1552,6 @@ packages:
 
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
-
-  '@ng-icons/core@33.1.0':
-    resolution: {integrity: sha512-kNkVt+saULAZp6f84PXmMRbNiiBVdqpM71ajiTAyTqOZCjKxXJe6gnpBfuOd0QvnkxEKSkFuswu4xFYbRPVXUQ==}
-    peerDependencies:
-      '@angular-devkit/schematics': '>=21.0.0'
-      '@angular/common': '>=21.0.0'
-      '@angular/core': '>=21.0.0'
-      '@schematics/angular': '>=21.0.0'
-      rxjs: ^6.5.3 || ^7.4.0
-
-  '@ng-icons/heroicons@33.1.0':
-    resolution: {integrity: sha512-KjctPPaOoFC08p1KcTt+Htib0vQ9yFv17NK1CGk7If6sJgfSsromMgwV/enG0nISBlzubBaxX/7R9GGrR5iKNw==}
 
   '@ngtools/webpack@21.2.2':
     resolution: {integrity: sha512-EnDlYg0KWqtvJ2FBIFR03nBHRhs8JFtb4yrdnL5zt7OP6mlRpCcFJ+kXwm6v9OVTEIsKKRdPRe0qpSYOAOdo6w==}
@@ -6030,18 +5996,6 @@ snapshots:
   '@esbuild/win32-x64@0.27.3':
     optional: true
 
-  '@fortawesome/angular-fontawesome@4.0.0(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))':
-    dependencies:
-      '@angular/core': 21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@fortawesome/fontawesome-svg-core': 7.2.0
-      tslib: 2.8.1
-
-  '@fortawesome/fontawesome-common-types@7.2.0': {}
-
-  '@fortawesome/fontawesome-svg-core@7.2.0':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 7.2.0
-
   '@gar/promise-retry@1.0.2':
     dependencies:
       retry: 0.13.1
@@ -6484,19 +6438,6 @@ snapshots:
       '@emnapi/runtime': 1.9.0
       '@tybys/wasm-util': 0.10.1
     optional: true
-
-  '@ng-icons/core@33.1.0(@angular-devkit/schematics@21.2.2(chokidar@5.0.0))(@angular/common@21.2.4(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(@schematics/angular@21.2.2(chokidar@5.0.0))(rxjs@7.8.2)':
-    dependencies:
-      '@angular-devkit/schematics': 21.2.2(chokidar@5.0.0)
-      '@angular/common': 21.2.4(@angular/core@21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 21.2.4(@angular/compiler@21.2.4)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@schematics/angular': 21.2.2(chokidar@5.0.0)
-      rxjs: 7.8.2
-      tslib: 2.8.1
-
-  '@ng-icons/heroicons@33.1.0':
-    dependencies:
-      tslib: 2.8.1
 
   '@ngtools/webpack@21.2.2(@angular/compiler-cli@21.2.4(@angular/compiler@21.2.4)(typescript@5.9.3))(typescript@5.9.3)(webpack@5.105.2(esbuild@0.27.3))':
     dependencies:

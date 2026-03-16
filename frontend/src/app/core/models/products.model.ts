@@ -5,6 +5,12 @@ export interface Product {
   price: number;
 }
 
+export interface ProductUpdateRequest {
+  name: string;
+  sku: string;
+  price: number;
+}
+
 export interface ProductWithInventory extends Product {
   inventoryByBranch?: {
     branchId: number;

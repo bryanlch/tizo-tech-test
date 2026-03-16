@@ -8,6 +8,7 @@ import { BranchesService } from "@core/services/branches/branches.service";
 import { NeoFieldComponent } from "@ui/field/neo-field.component";
 import { NeoInputDirective } from "@ui/input/neo-input.directive";
 import { NeoButtonDirective } from "@ui/button/neo-button.directive";
+import { ModalComponent } from "@shared/ui";
 
 @Component({
   selector: "app-branches",
@@ -18,6 +19,7 @@ import { NeoButtonDirective } from "@ui/button/neo-button.directive";
     NeoFieldComponent,
     NeoInputDirective,
     NeoButtonDirective,
+    ModalComponent,
   ],
   templateUrl: "./branches.component.html",
 })
@@ -26,12 +28,13 @@ export class BranchesComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   branches = signal<Branch[]>([]);
-
+  selectedBranch = signal<Branch | null>(null);
+  showModal = signal(false);
   loading = signal(false);
   errorMessage = signal("");
   successMessage = signal("");
 
-  form = this.fb.nonNullable.group({
+  branchForm = this.fb.nonNullable.group({
     name: ["", [Validators.required, Validators.minLength(2)]],
     address: ["", [Validators.required, Validators.minLength(5)]],
   });
@@ -40,56 +43,71 @@ export class BranchesComponent implements OnInit {
     this.loadBranches();
   }
 
+  openModal(branch?: Branch): void {
+    if (branch) {
+      this.selectedBranch.set(branch);
+      this.branchForm.patchValue({
+        name: branch.name,
+        address: branch.address,
+      });
+    } else {
+      this.selectedBranch.set(null);
+      this.branchForm.reset();
+    }
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+    this.selectedBranch.set(null);
+    this.branchForm.reset();
+    this.errorMessage.set("");
+    this.successMessage.set("");
+  }
+
   loadBranches(): void {
     this.branchesService.getAll().subscribe({
       next: (res: any) => {
-        if (res.code === 200 || res.code === 201) {
-          this.branches.set(res.data);
-        }
+        if (res.code === 200 || res.code === 201) this.branches.set(res.data);
       },
-      error: (err) => {
-        console.error("Error loading branches", err);
-      },
+      error: (err) => console.error("Error loading branches", err),
     });
   }
 
-  onSubmit(): void {
-    this.errorMessage.set("");
-    this.successMessage.set("");
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.errorMessage.set("Por favor completa todos los campos.");
+  saveBranch(): void {
+    if (this.branchForm.invalid) {
+      this.branchForm.markAllAsTouched();
+      this.errorMessage.set("Por favor, revisa los campos marcados.");
       return;
     }
 
     this.loading.set(true);
+    this.errorMessage.set("");
+    const data = this.branchForm.getRawValue();
+    const isEditing = !!this.selectedBranch();
 
-    this.branchesService
-      .create({
-        name: this.form.value.name as string,
-        address: this.form.value.address as string,
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.loading.set(false);
+    const request = isEditing
+      ? this.branchesService.update({ id: this.selectedBranch()!.id, ...data })
+      : this.branchesService.create(data);
 
-          if (res.code === 200 || res.code === 201) {
-            this.successMessage.set("Sucursal creada con éxito.");
-
-            this.branches.update((b) => [...b, res.data]);
-
-            this.form.reset();
-          } else {
-            this.errorMessage.set(res.message);
+    request.subscribe({
+      next: (res: any) => {
+        this.loading.set(false);
+        if (res.code === 200 || res.code === 201) {
+          this.successMessage.set(isEditing ? "Sucursal actualizada" : "Sucursal creada");
+          this.loadBranches();
+          if (!isEditing) this.branchForm.reset();
+          if (isEditing) {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1500);
           }
-        },
-
-        error: (err: any) => {
-          this.loading.set(false);
-
-          this.errorMessage.set(err.error?.message || "Error del servidor.");
-        },
-      });
+        }
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.errorMessage.set(err.error?.message || "Error en el servidor.");
+      },
+    });
   }
 }

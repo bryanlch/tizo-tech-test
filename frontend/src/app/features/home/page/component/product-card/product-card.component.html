@@ -1,0 +1,34 @@
+<div
+  (click)="selected.emit(product())"
+  [ngClass]="bgColor()"
+  class="group flex flex-col border-4 border-black shadow-neo-lg hover:shadow-neo-xl hover:-translate-y-1 transition-all cursor-pointer"
+>
+  <div class="flex justify-end -mt-4 mr-2">
+    <span
+      class="bg-neo-primary text-black border-4 border-black px-3 py-0.5 font-black text-xs uppercase italic transform rotate-2 group-hover:rotate-0 transition-transform"
+    >
+      SKU: {{ product().sku }}
+    </span>
+  </div>
+
+  <div class="p-5 pt-2 flex flex-col h-full">
+    <h3
+      class="text-xl md:text-2xl font-black leading-tight mb-4 min-h-12 line-clamp-2 uppercase"
+    >
+      {{ product().name }}
+    </h3>
+
+    <div class="mt-auto border-t-4 border-black pt-4 flex flex-col items-center">
+      <span class="text-[10px] font-black uppercase self-start mb-1 text-gray-500 italic"
+        >Precio de venta:</span
+      >
+      <div
+        class="bg-yellow-300 w-full border-2 border-black p-2 text-center transform -rotate-1 shadow-neo group-hover:rotate-0 transition-transform"
+      >
+        <p class="text-3xl md:text-4xl font-black tracking-tighter">
+          {{ product().price | currency }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

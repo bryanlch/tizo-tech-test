@@ -10,11 +10,18 @@ import { InventoryService } from "@core/services/inventory/inventory.service";
 import { Branch } from "@core/models/branches.model";
 import { Product, ProductWithInventory } from "@core/models/products.model";
 import { InventoyByProduct } from "@core/models/inventory.model";
+import { BranchSelectorComponent } from "@features/inventory/page/inventory/component/branch-selector/branch-selector.component";
 
 @Component({
   selector: "app-inventory",
   standalone: true,
-  imports: [CommonModule, FormsModule, InventoryCardComponent, InventoryTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    InventoryCardComponent,
+    InventoryTableComponent,
+    BranchSelectorComponent,
+  ],
   templateUrl: "./inventory.component.html",
 })
 export class InventoryComponent implements OnInit {
@@ -23,7 +30,7 @@ export class InventoryComponent implements OnInit {
   private inventoryService = inject(InventoryService);
 
   branches = signal<Branch[]>([]);
-  products = signal<Product[]>([]);
+  products = signal<ProductWithInventory[]>([]);
   inventoryData = signal<InventoyByProduct[]>([]);
 
   selectedBranchId = signal<number | null>(null);
@@ -96,8 +103,8 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  onBranchSelect(event: Event): void {
-    const branchId = Number((event.target as HTMLSelectElement).value);
+  onBranchSelect(value: string): void {
+    const branchId = Number(value);
     this.selectedBranchId.set(branchId || null);
   }
 
