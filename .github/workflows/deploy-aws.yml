@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   ECR_REPO_BACKEND: sim-backend-repo
   ECR_REPO_FRONTEND: sim-frontend-repo
   ECS_CLUSTER: sim-cluster-digitaltech
