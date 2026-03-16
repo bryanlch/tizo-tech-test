@@ -11,8 +11,7 @@ env:
   ECR_REPO_BACKEND: sim-backend-repo
   ECR_REPO_FRONTEND: sim-frontend-repo
   ECS_CLUSTER: sim-cluster-digitaltech
-  ECS_SVC_BACKEND: sim-backend-service
-  ECS_SVC_FRONTEND: sim-frontend-service
+  ECS_SERVICE_MAIN: sim-full-service
 
 jobs:
   build-and-deploy:
@@ -60,5 +59,4 @@ jobs:
       # 6. Update ECS Services
       - name: Update ECS Services
         run: |
-          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SVC_BACKEND }} --force-new-deployment
-          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SVC_FRONTEND }} --force-new-deployment
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE_MAIN }} --force-new-deployment
