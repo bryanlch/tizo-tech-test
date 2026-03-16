@@ -9,12 +9,16 @@ import { API_ENDPOINTS } from "../../constants/api.constants";
   providedIn: "root",
 })
 export class ProductsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProductsWithInventory(): Observable<ApiResponse<ProductWithInventory[]>> {
     return this.http.get<ApiResponse<ProductWithInventory[]>>(
       API_ENDPOINTS.PRODUCTS.WITH_INVENTORY,
     );
+  }
+
+  getProductsPublic(): Observable<ApiResponse<Product[]>> {
+    return this.http.get<ApiResponse<Product[]>>(API_ENDPOINTS.PRODUCTS.PUBLIC);
   }
 
   getProducts(): Observable<ApiResponse<Product[]>> {
