@@ -10,7 +10,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPO_BACKEND: sim-backend-repo
   ECR_REPO_FRONTEND: sim-frontend-repo
-  ECS_CLUSTER: sim-cluster
+  ECS_CLUSTER: sim-cluster-digitaltech
   ECS_SVC_BACKEND: sim-backend-service
   ECS_SVC_FRONTEND: sim-frontend-service
 
